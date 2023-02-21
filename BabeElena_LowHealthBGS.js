@@ -30,12 +30,22 @@ _BabeElena.LowHealthBGS.BGSChosen = (_BabeElena.LowHealthBGS.parameters["BGSChos
 
 Scene_Battle.prototype.LowHealthBGS = function() {
 
+
     if (($gameParty.members()[0].hp / $gameParty.members()[0].param(0)) * 100 <= (_BabeElena.LowHealthBGS.HPPercentage)) {
-        AudioManager.playBgm({ name: AudioManager._currentBgm.name, volume: 50, pitch: 100 });
+        AudioManager.playBgm({ name: AudioManager._currentBgm === null? '' : AudioManager._currentBgm.name, volume: 50, pitch: 100 });
         AudioManager.playBgs({ name: _BabeElena.LowHealthBGS.BGSChosen, volume: 100, pitch: 100 });
+
+        if ($plugins.find(plugin => plugin.name == "FilterControllerMZ")?.status == true) {
+            $gameMap.enableFilter("lowhealth", true);
+        }
+
     } else {
-        AudioManager.playBgm({ name: AudioManager._currentBgm.name, volume: 90, pitch: 100 });
+        AudioManager.playBgm({ name: AudioManager._currentBgm === null? '' : AudioManager._currentBgm.name, volume: 90, pitch: 100 });
         AudioManager.fadeOutBgs(0);
+
+        if ($plugins.find(plugin => plugin.name == "FilterControllerMZ")?.status == true) {
+            $gameMap.enableFilter("lowhealth", false);
+        }
     }
     setTimeout(() => {  this.LowHealthBGS(); }, 1000);
 };
